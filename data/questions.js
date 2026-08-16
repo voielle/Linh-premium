@@ -38,10 +38,9 @@ export const QUESTIONS = [
   },
   {
     id: 6, topic: "Affection", question: "If I got a little clingy, how would you feel?", type: "ab",
-    ai: { min: 0, max: 5, rubric: "affection and openness to closeness" },
     options: [
-      { key: "A", text: "I’d love it. I’m a touchy person too.", hearts: 5, feedback: "Careful. You’re encouraging me.", emoji: "😏" },
-      { key: "B", text: "Keep it subtle. I’m not big on PDA.", hearts: 2, feedback: "Fine. Don’t ask for it later.", emoji: "🙃" }
+      { key: "A", text: "I’d love it. I’m a touchy person too.", hearts: 5 },
+      { key: "B", text: "Keep it subtle. I’m not big on PDA.", hearts: 2 }
     ]
   },
   {
@@ -66,7 +65,7 @@ export const QUESTIONS = [
     ]
   },
   {
-    id: 10, topic: "Relationship intention", question: "What if you started getting really attached to me?", type: "abc", specialAnimation: "heart-choice",
+    id: 10, topic: "Relationship intention", question: "What if you started getting really attached to me?", type: "abc",
     ai: { min: -10, max: 10, rubric: "relationship intention and commitment" },
     options: [
       { key: "A", text: "I’d want to build something real with you.", hearts: 10 },
