@@ -99,7 +99,7 @@ async function handleAnswer(q, key) {
   if (typeof option.hearts === "number") state.fixedScore += option.hearts;
   appendHeart(button, option.hearts);
 
-  if (q.specialAnimation && (q.id === 3 || q.id === 8 || q.id === 10)) {
+  if (q.specialAnimation && (q.id === 3 || q.id === 8)) {
     playLargeHeart(option.hearts >= 0 ? "positive" : "negative");
   }
 
@@ -138,6 +138,7 @@ function renderFreeText(q, button, option) {
     submit.disabled = true; textarea.disabled = true;
     try {
       // The input UI disappears immediately after submit, as locked in the UI spec.
+      const submitStartedAt = performance.now();
       const scorePromise = scoreWithAI(q, text);
       textarea.closest(".free-text-wrap").classList.add("submitted");
       button.querySelector(".answer-text").textContent = `C. ${text}`;
@@ -149,12 +150,11 @@ function renderFreeText(q, button, option) {
 
       // Move to the next question 1 second after Submit.
       // The AI score still has to resolve before leaving so the final score remains accurate.
-      const submittedAt = performance.now();
       const score = await scorePromise;
       state.aiScores[q.id] = score;
       state.answers[q.id] = { key: "C", text, freeText: true, score };
 
-      const elapsed = performance.now() - submittedAt;
+      const elapsed = performance.now() - submitStartedAt;
       if (elapsed < 1000) await sleep(1000 - elapsed);
       nextQuestion();
     } catch (err) {
@@ -192,7 +192,7 @@ function makeHeartBalloons(count = 18) {
     heart.className = "balloon-heart";
     heart.textContent = symbols[i % symbols.length];
     heart.style.setProperty("--x", `${(Math.random() * 100).toFixed(1)}vw`);
-    heart.style.setProperty("--delay", `${(Math.random() * 0.65).toFixed(2)}s`);
+    heart.style.setProperty("--delay", "0s");
     heart.style.setProperty("--duration", `${(3.4 + Math.random() * 1.8).toFixed(2)}s`);
     heart.style.setProperty("--size", `${58 + Math.random() * 62}px`);
     heart.style.setProperty("--opacity", `${(0.38 + Math.random() * 0.48).toFixed(2)}`);
