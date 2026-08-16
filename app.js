@@ -146,11 +146,16 @@ function renderFreeText(q, button, option) {
       document.querySelector(".question-wrap")?.classList.add("free-text-complete");
       // The score is intentionally hidden from the player; show the locked +? ❤️ pop-up immediately.
       appendHeart(button, null, true);
-      await sleep(900);
+
+      // Move to the next question 1 second after Submit.
+      // The AI score still has to resolve before leaving so the final score remains accurate.
+      const submittedAt = performance.now();
       const score = await scorePromise;
       state.aiScores[q.id] = score;
       state.answers[q.id] = { key: "C", text, freeText: true, score };
-      await sleep(700);
+
+      const elapsed = performance.now() - submittedAt;
+      if (elapsed < 1000) await sleep(1000 - elapsed);
       nextQuestion();
     } catch (err) {
       submit.disabled = false; textarea.disabled = false;
@@ -196,7 +201,7 @@ function makeHeartBalloons(count = 18) {
     layer.appendChild(heart);
   }
   document.body.appendChild(layer);
-  setTimeout(() => layer.remove(), 5600);
+  setTimeout(() => layer.remove(), 6800);
 }
 
 function playLargeHeart(type) {
