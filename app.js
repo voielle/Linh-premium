@@ -131,37 +131,44 @@ function renderFreeText(q, button, option) {
   const submit = document.querySelector("#submitFreeText");
   textarea.addEventListener("input", () => { document.querySelector("#charCount").textContent = textarea.value.length; });
   textarea.focus();
-  submit.onclick = async () => {
+  submit.onclick = () => {
     const text = textarea.value.trim();
     const error = document.querySelector("#textError");
-    if (!text) { error.hidden = false; error.textContent = "Please enter an answer."; return; }
-    submit.disabled = true; textarea.disabled = true;
-    try {
-      // The input UI disappears immediately after submit, as locked in the UI spec.
-      const submitStartedAt = performance.now();
-      const scorePromise = scoreWithAI(q, text);
-      textarea.closest(".free-text-wrap").classList.add("submitted");
-      button.querySelector(".answer-text").textContent = `C. ${text}`;
-      button.classList.add("free-text-selected");
-      // Re-center the submitted answer before showing the unknown-score pop-up.
-      document.querySelector(".question-wrap")?.classList.add("free-text-complete");
-      // The score is intentionally hidden from the player; show the locked +? ❤️ pop-up immediately.
-      appendHeart(button, null, true);
-
-      // Move to the next question 1 second after Submit.
-      // The AI score still has to resolve before leaving so the final score remains accurate.
-      const score = await scorePromise;
-      state.aiScores[q.id] = score;
-      state.answers[q.id] = { key: "C", text, freeText: true, score };
-
-      const elapsed = performance.now() - submitStartedAt;
-      if (elapsed < 1000) await sleep(1000 - elapsed);
-      nextQuestion();
-    } catch (err) {
-      submit.disabled = false; textarea.disabled = false;
-      error.hidden = false; error.textContent = "Something went wrong. Please try again.";
-      console.error(err);
+    if (!text) {
+      error.hidden = false;
+      error.textContent = "Please enter an answer.";
+      return;
     }
+
+    submit.disabled = true;
+    textarea.disabled = true;
+
+    // Lock the answer and show the +? ❤️ state immediately.
+    textarea.closest(".free-text-wrap").classList.add("submitted");
+    button.querySelector(".answer-text").textContent = `C. ${text}`;
+    button.classList.add("free-text-selected");
+    document.querySelector(".question-wrap")?.classList.add("free-text-complete");
+    appendHeart(button, null, true);
+
+    // IMPORTANT:
+    // Page navigation must NOT wait for the Gemini API.
+    // The player moves on exactly 1 second after pressing Submit.
+    setTimeout(() => {
+      nextQuestion();
+    }, 1000);
+
+    // Score in the background. If the API is slow or unavailable,
+    // the page flow still continues and the AI score simply contributes 0.
+    scoreWithAI(q, text)
+      .then(score => {
+        state.aiScores[q.id] = score;
+        state.answers[q.id] = { key: "C", text, freeText: true, score };
+      })
+      .catch(err => {
+        state.aiScores[q.id] = 0;
+        state.answers[q.id] = { key: "C", text, freeText: true, score: 0 };
+        console.error("AI scoring failed:", err);
+      });
   };
 }
 
