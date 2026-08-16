@@ -37,12 +37,11 @@ export const QUESTIONS = [
     ]
   },
   {
-    id: 6, topic: "Affection", question: "If I got a little clingy, how would you feel?", type: "abc",
+    id: 6, topic: "Affection", question: "If I got a little clingy, how would you feel?", type: "ab",
     ai: { min: 0, max: 5, rubric: "affection and openness to closeness" },
     options: [
       { key: "A", text: "I’d love it. I’m a touchy person too.", hearts: 5, feedback: "Careful. You’re encouraging me.", emoji: "😏" },
-      { key: "B", text: "Keep it subtle. I’m not big on PDA.", hearts: 2, feedback: "Fine. Don’t ask for it later.", emoji: "🙃" },
-      { key: "C", text: "Tell me what you’d prefer.", freeText: true, placeholder: "Tell me what you’d prefer." }
+      { key: "B", text: "Keep it subtle. I’m not big on PDA.", hearts: 2, feedback: "Fine. Don’t ask for it later.", emoji: "🙃" }
     ]
   },
   {
@@ -55,8 +54,8 @@ export const QUESTIONS = [
   {
     id: 8, topic: "Letting Yuri in", question: "What if I wanted to be part of your everyday life?", type: "ab", specialAnimation: "heart-choice",
     options: [
-      { key: "A", text: "I’d love that. Come in.", hearts: 10, feedback: "Good. I was planning to stay anyway.", emoji: "🥰" },
-      { key: "B", text: "I like keeping my own world.", hearts: -10, feedback: "Fine. I’ll stay at the door.", emoji: "🥲" }
+      { key: "A", text: "I’d love that. Come in.", hearts: 10 },
+      { key: "B", text: "I like keeping my own world.", hearts: -10 }
     ]
   },
   {

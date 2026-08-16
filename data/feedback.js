@@ -8,7 +8,6 @@ export const SCORE_FEEDBACK = [
 ];
 
 export function getPersonalizedFeedback(answers, score) {
-  // Critical patterns intentionally take priority over score ranges.
   const q3 = answers[3]?.key;
   const q8 = answers[8]?.key;
   const q10 = answers[10]?.key;
