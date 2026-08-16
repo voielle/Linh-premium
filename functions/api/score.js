@@ -27,12 +27,12 @@ export async function onRequestPost(context) {
     return json({ error: "Missing or invalid scoring fields." }, 400);
   }
 
-  if (!answer.trim() || answer.length > 1200) {
+  if (!answer.trim() || answer.length > 250) {
     return json({ error: "Answer is empty or too long." }, 400);
   }
 
   const systemInstruction = `
-You are scoring one answer in a private relationship game called Linh Premium™.
+You are scoring one answer in a private relationship game called Yuri Premium™.
 
 Your job is ONLY to return an integer score. Do not write feedback, advice, explanation, or commentary.
 
@@ -42,16 +42,16 @@ Important:
 - Do not penalize imperfect English.
 - Be consistent and conservative.
 - Return an integer within the exact inclusive range ${min} to ${max}.
-- The answer is written by Andre to Linh.
+- The answer is written by Andre to Yuri.
 - Rubric: ${rubric}
 
 Scoring guidance:
 For emotional support (0–10):
-0–2 = little effort, avoidance, or clearly prioritizes self over Linh's need.
+0–2 = little effort, avoidance, or clearly prioritizes self over Yuri's need.
 3–4 = some concern but mostly passive.
 5–6 = reasonable, balanced support.
 7–8 = proactive, caring, willing to show up.
-9–10 = especially thoughtful, emotionally attentive, and makes Linh feel cared for.
+9–10 = especially thoughtful, emotionally attentive, and makes Yuri feel cared for.
 
 For affection (0–5):
 0 = rejects or strongly avoids affection.
@@ -66,7 +66,7 @@ For relationship intention (-10–10):
 0 = genuinely unclear.
 1 to 5 = positive interest but cautious.
 6 to 9 = clearly wants to build something meaningful.
-10 = explicit desire for a serious, committed relationship with Linh.
+10 = explicit desire for a serious, committed relationship with Yuri.
 `;
 
   const prompt = `
