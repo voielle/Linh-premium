@@ -142,12 +142,15 @@ function renderFreeText(q, button, option) {
       textarea.closest(".free-text-wrap").classList.add("submitted");
       button.querySelector(".answer-text").textContent = `C. ${text}`;
       button.classList.add("free-text-selected");
-      await sleep(1000);
+      // Re-center the submitted answer before showing the unknown-score pop-up.
+      document.querySelector(".question-wrap")?.classList.add("free-text-complete");
+      // The score is intentionally hidden from the player; show the locked +? ❤️ pop-up immediately.
+      appendHeart(button, null, true);
+      await sleep(900);
       const score = await scorePromise;
       state.aiScores[q.id] = score;
       state.answers[q.id] = { key: "C", text, freeText: true, score };
-      appendHeart(button, null, true);
-      await sleep(1000);
+      await sleep(700);
       nextQuestion();
     } catch (err) {
       submit.disabled = false; textarea.disabled = false;
@@ -175,19 +178,25 @@ function nextQuestion() {
 function calculateFinalScore() { return state.fixedScore + Object.values(state.aiScores).reduce((sum, score) => sum + score, 0); }
 
 function makeHeartBalloons(count = 18) {
-  const layer = document.createElement("div"); layer.className = "heart-balloons"; layer.setAttribute("aria-hidden", "true");
-  const symbols = ["♥", "♥", "♡", "❤"];
-  for (let i=0; i<count; i++) {
-    const heart = document.createElement("span"); heart.className = "balloon-heart"; heart.textContent = symbols[i % symbols.length];
-    heart.style.setProperty("--x", `${(Math.random()*100).toFixed(1)}vw`);
-    heart.style.setProperty("--delay", `${(Math.random()*0.35).toFixed(2)}s`);
-    heart.style.setProperty("--duration", `${(1.15 + Math.random()*0.7).toFixed(2)}s`);
-    heart.style.setProperty("--size", `${20 + Math.random()*42}px`);
-    heart.style.setProperty("--drift", `${-55 + Math.random()*110}px`);
+  const layer = document.createElement("div");
+  layer.className = "heart-balloons";
+  layer.setAttribute("aria-hidden", "true");
+  const symbols = ["♥", "❤", "♥", "♡"];
+  for (let i = 0; i < count; i++) {
+    const heart = document.createElement("span");
+    heart.className = "balloon-heart";
+    heart.textContent = symbols[i % symbols.length];
+    heart.style.setProperty("--x", `${(Math.random() * 100).toFixed(1)}vw`);
+    heart.style.setProperty("--delay", `${(Math.random() * 0.65).toFixed(2)}s`);
+    heart.style.setProperty("--duration", `${(3.4 + Math.random() * 1.8).toFixed(2)}s`);
+    heart.style.setProperty("--size", `${58 + Math.random() * 62}px`);
+    heart.style.setProperty("--opacity", `${(0.38 + Math.random() * 0.48).toFixed(2)}`);
+    heart.style.setProperty("--drift", `${-75 + Math.random() * 150}px`);
+    heart.style.setProperty("--rotation", `${-12 + Math.random() * 24}deg`);
     layer.appendChild(heart);
   }
   document.body.appendChild(layer);
-  setTimeout(() => layer.remove(), 2300);
+  setTimeout(() => layer.remove(), 5600);
 }
 
 function playLargeHeart(type) {
@@ -210,7 +219,7 @@ function renderFinalResult() {
     </section>`;
     makeHeartBalloons(18);
   });
-  setTimeout(renderTermsPage, 1500 + 2000 + 260);
+  setTimeout(renderTermsPage, 5600);
 }
 
 function renderTermsPage() {
@@ -222,9 +231,9 @@ function renderTermsPage() {
     </section>`;
     document.querySelector("#confirmUpgrade").onclick = async () => {
       const btn = document.querySelector("#confirmUpgrade");
-      if (btn.dataset.busy) return; btn.dataset.busy = "1";
-      makeHeartBalloons(18);
-      await sleep(1550);
+      if (btn.dataset.busy) return;
+      btn.dataset.busy = "1";
+      await sleep(220);
       renderPremiumActivated();
     };
   });
@@ -237,9 +246,11 @@ function renderPremiumActivated() {
         <h1 class="success-hero">It’s official. Welcome to Yuri Premium™.</h1>
         <h2 class="privileges-title">Premium Privileges Unlocked</h2>
         <div class="benefits">${BENEFITS.map((benefit,index)=>`<article class="benefit"><h3>${String(index+1).padStart(2,"0")} — ${escapeHTML(benefit.title)}</h3><p>${escapeHTML(benefit.text)}</p></article>`).join("")}</div>
-        <p class="final-kiss">You may now kiss… Yuri.</p>
+        <p class="final-kiss">You may now kiss… Yuri. 💋</p>
       </div>
     </section>`;
+    // The Success Page opens with the global heart-balloon celebration.
+    makeHeartBalloons(18);
   });
 }
 
