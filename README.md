@@ -85,3 +85,4 @@ The three free-text questions are scored server-side:
 Andre sees only `+? ❤️` for these answers. The real AI score is kept out of the browser UI and added only to the final score calculation.
 
 The current implementation uses the stable `gemini-2.5-flash` model. Change `MODEL` in `functions/api/score.js` if you later decide to migrate to another supported Gemini model.
+Yuri Premium — final production version.
